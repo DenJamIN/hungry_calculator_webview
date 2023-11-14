@@ -17,9 +17,7 @@ class _MainPage extends State<MainPage> {
   }
 
   bool textScanning = false;
-
   XFile? imageFile;
-
   String scannedText = "";
 
   @override
