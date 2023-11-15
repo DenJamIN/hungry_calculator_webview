@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hungry_calculator/widget/group_widget.dart';
 import 'package:hungry_calculator/widget/receipt_widget.dart';
 
+import '../widget/confirm_receipts_widget.dart';
 import '../widget/split_widget.dart';
 
 class StepperPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class StepperPage extends StatefulWidget {
 class _StepperPageState extends State<StepperPage> {
   List<String> groups = [];
   List<Map<String, dynamic>> items = [];
+  Map<String, List<Map<String, dynamic>>> receipts = {};
 
   int activeStep = 0;
   int reachedStep = 0;
@@ -187,11 +189,11 @@ class _StepperPageState extends State<StepperPage> {
   }
 
   Widget splitReceipt() {
-    return SizedBox(width: 400, height: 500, child: GuestSelectionWidget(items: items, groups: groups,));
+    return SizedBox(width: 400, height: 500, child: GuestSelectionWidget(items: items, groups: groups, receipts: receipts,));
   }
 
   Widget done() {
-    return const Center(child: Text('Готово'),);
+    return SizedBox(width: 400, height: 500, child: GuestSummaryWidget(receipts: receipts));
   }
 }
 

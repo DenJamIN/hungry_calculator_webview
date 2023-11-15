@@ -37,7 +37,7 @@ class _GroupWidgetState extends State<GroupWidget> {
         child: TextField(
           controller: textController,
           decoration: const InputDecoration(
-            hintText: 'Введите текст',
+            hintText: 'Имя гостя',
           ),
           textCapitalization: TextCapitalization.sentences,
           style: const TextStyle(

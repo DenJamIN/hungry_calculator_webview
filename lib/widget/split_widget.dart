@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 class GuestSelectionWidget extends StatefulWidget {
+  Map<String, List<Map<String, dynamic>>> receipts = {};
   final List<Map<String, dynamic>> items;
   final List<String> groups;
 
-  GuestSelectionWidget({required this.items, required this.groups});
+  //todo fix
+  GuestSelectionWidget({required this.items, required this.groups, required this.receipts});
 
   @override
   _GuestSelectionWidgetState createState() => _GuestSelectionWidgetState();
 }
 
 class _GuestSelectionWidgetState extends State<GuestSelectionWidget> {
-  Map<String, List<Map<String, dynamic>>> selectedItems = {};
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class _GuestSelectionWidgetState extends State<GuestSelectionWidget> {
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
-          return ItemSelectionScreen(groupName: groupName, items: widget.items, selectedItems: selectedItems);
+          return ItemSelectionScreen(groupName: groupName, items: widget.items, selectedItems: widget.receipts);
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0);
@@ -78,7 +79,7 @@ class _GuestSelectionWidgetState extends State<GuestSelectionWidget> {
 
     if (selectedItemsForGroup != null) {
       setState(() {
-        selectedItems[groupName] = selectedItemsForGroup;
+        widget.receipts[groupName] = selectedItemsForGroup;
       });
     }
   }
