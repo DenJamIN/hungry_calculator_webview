@@ -29,7 +29,7 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
                 child: _buildNumericTextField(
                   priceEditingController,
                   'Цена',
-                  TextInputType.numberWithOptions(decimal: true),
+                  const TextInputType.numberWithOptions(decimal: true),
                   [
                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))
                   ],
@@ -46,7 +46,7 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
                 child: _buildNumericTextField(
                   quantityEditingController,
                   'Количество',
-                  TextInputType.numberWithOptions(decimal: true),
+                  const TextInputType.numberWithOptions(decimal: true),
                   [
                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))
                   ],
@@ -59,10 +59,8 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
                   },
                   onEditingComplete: () {
                     if (editingItem != null) {
-                      // Если редактируем элемент, завершаем редактирование
                       editItem();
                     } else {
-                      // Если добавляем новый элемент, добавляем его
                       addItem();
                     }
                   },
@@ -74,7 +72,7 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
             child: ListView.builder(
               itemCount: widget.items.length,
               itemBuilder: (context, index) {
-                return _buildListItem(widget.items[index], index);
+                return _buildCard(widget.items[index], index);
               },
             ),
           ),
@@ -82,14 +80,15 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           _buildFloatingActionButton(onPressed: addItem, icon: Icons.add),
-          const SizedBox(width: 16.0),
+          const SizedBox(height: 16.0),
           _buildFloatingActionButton(onPressed: () {}, icon: Icons.camera_alt),
-          const SizedBox(width: 16.0),
+          const SizedBox(height: 16.0),
           _buildFloatingActionButton(
               onPressed: () {}, icon: Icons.document_scanner),
-          const SizedBox(width: 16.0),
+          const SizedBox(height: 16.0),
         ],
       ),
     );
@@ -111,10 +110,8 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
         ),
         onEditingComplete: () {
           if (editingItem != null) {
-            // Если редактируем элемент, завершаем редактирование
             editItem();
           } else {
-            // Если добавляем новый элемент, добавляем его
             addItem();
           }
         },
@@ -157,35 +154,6 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
     );
   }
 
-  Widget _buildCard(Map<String, dynamic> item) {
-    return Card(
-      elevation: 5.0,
-      margin: const EdgeInsets.symmetric(
-        vertical: 8.0,
-        horizontal: 16.0,
-      ),
-      child: ListTile(
-        tileColor: const Color.fromRGBO(46, 46, 229, 100),
-        title: Text(
-          'Название: ${item['name']}',
-          style: const TextStyle(
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        subtitle: Text(
-          'Количество: ${item['quantity']}\nЦена: ${item['price']}',
-          style: const TextStyle(
-            fontFamily: 'Montserrat',
-            fontStyle: FontStyle.italic,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildFloatingActionButton(
       {required VoidCallback onPressed, required IconData icon}) {
     return FloatingActionButton(
@@ -224,26 +192,36 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
     }
   }
 
-  Widget _buildListItem(Map<String, dynamic> item, int index) {
-    return ListTile(
-      title: Text(
-        'Название: ${item['name']}',
-        style: const TextStyle(
-          fontFamily: 'Montserrat',
-          fontWeight: FontWeight.bold,
-        ),
+  Widget _buildCard(Map<String, dynamic> item, int index) {
+    return Card(
+      elevation: 5.0,
+      margin: const EdgeInsets.symmetric(
+        vertical: 8.0,
+        horizontal: 16.0,
       ),
-      subtitle: Text(
-        'Цена: ${item['price']}, Количество: ${item['quantity']}',
-        style: const TextStyle(
-          fontFamily: 'Montserrat',
-          fontStyle: FontStyle.italic,
+      child: ListTile(
+        tileColor: const Color.fromRGBO(46, 46, 229, 100),
+        title: Text(
+          'Название: ${item['name']}',
+          style: const TextStyle(
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.bold,
+            color: Colors.white
+          ),
         ),
+        subtitle: Text(
+          'Количество: ${item['quantity']}\nЦена: ${item['price']}',
+          style: const TextStyle(
+            fontFamily: 'Montserrat',
+            fontStyle: FontStyle.italic,
+            color: Colors.white,
+            fontSize: 15
+          ),
+        ),
+        onLongPress: () {
+          startEditing(item);
+        },
       ),
-      onLongPress: () {
-        // Начинаем редактирование при долгом нажатии
-        startEditing(item);
-      },
     );
   }
 
