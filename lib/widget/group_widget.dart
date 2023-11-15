@@ -69,14 +69,19 @@ class _GroupWidgetState extends State<GroupWidget> {
             elevation: 5.0,
             margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: ListTile(
-              tileColor: const Color.fromRGBO(46, 46, 229, 100), // Фон ListTile
-              title: Text(
-                widget.groups[index],
-                style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 18.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+              tileColor: const Color.fromRGBO(46, 46, 229, 100),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              title: Center(
+                child: Text(
+                  widget.groups[index],
+                  style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 18.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           );

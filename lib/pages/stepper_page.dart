@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hungry_calculator/widget/group_widget.dart';
 import 'package:hungry_calculator/widget/receipt_widget.dart';
 
+import '../widget/split_widget.dart';
+
 class StepperPage extends StatefulWidget {
   const StepperPage({Key? key}) : super(key: key);
 
@@ -185,7 +187,7 @@ class _StepperPageState extends State<StepperPage> {
   }
 
   Widget splitReceipt() {
-    return const Center(child: Text('Разделить счёт'),);
+    return SizedBox(width: 400, height: 500, child: GuestSelectionWidget(items: items, groups: groups,));
   }
 
   Widget done() {

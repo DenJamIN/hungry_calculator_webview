@@ -55,7 +55,7 @@ class _GreetingsPage extends State<GreetingsPage> {
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
-          return const StepperPage(); // Замените NextPage() на ваш виджет следующей страницы
+          return const StepperPage();
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0);

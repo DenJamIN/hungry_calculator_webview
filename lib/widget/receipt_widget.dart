@@ -173,8 +173,8 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
       setState(() {
         widget.items.add({
           'name': name,
-          'price': price,
-          'quantity': quantity,
+          'price': num.parse(price),
+          'quantity': num.parse(quantity),
         });
 
         // Очистка полей после добавления элемента
