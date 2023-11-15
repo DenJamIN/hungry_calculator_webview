@@ -1,15 +1,18 @@
 class CreateBillRequestPositionPayer {
   int id;
-  int pricePerPart;
+  int personalPrice;
+  int personalParts;
 
   CreateBillRequestPositionPayer({
     required this.id,
-    required this.pricePerPart,
+    required this.personalPrice,
+    required this.personalParts,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'pricePerPart': pricePerPart,
+        'personalPrice': personalPrice,
+        'personalParts': personalParts,
       };
 
   @override
