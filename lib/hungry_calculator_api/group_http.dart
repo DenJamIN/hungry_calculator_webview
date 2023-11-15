@@ -11,15 +11,13 @@ class GroupHttp {
     final response =
         await Network(path: '$path/create/').post(jsonEncode(CreateGroupRequest(
       title: group.title,
-      creator: GroupCreatorDto(
-        id: group.creator.id!,
-        requisites: group.creator.requisites!,
-      ),
+      creator: GroupCreatorDto(id: group.creator.id!),
+      requisites: group.requisites,
       participants: group.participants!
           .map((participant) =>
               CreateGroupRequestGroupParticipant(name: participant.name))
           .toList(),
-    )));
+    ).toJson()));
     final decodedResponse =
         CreateGroupResponse.fromJson(jsonDecode(response.body));
 

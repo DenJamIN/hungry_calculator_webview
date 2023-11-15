@@ -5,7 +5,7 @@ class CreateGroupResponse {
 
   factory CreateGroupResponse.fromJson(Map<String, dynamic> json) =>
       CreateGroupResponse(
-        id: json['id'],
+        id: json['groupId'],
       );
 
   @override
