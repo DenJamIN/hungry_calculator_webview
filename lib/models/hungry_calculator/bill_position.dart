@@ -3,12 +3,14 @@ import 'package:tuple/tuple.dart';
 import 'group_participant.dart';
 
 class BillPosition {
+  int? id;
   String title;
   int price;
   int parts;
   Map<GroupParticipant, Tuple2<int, int>> personalParts;
 
   BillPosition({
+    this.id,
     required this.title,
     required this.price,
     required this.parts,
@@ -20,6 +22,7 @@ class BillPosition {
       identical(this, other) ||
       other is BillPosition &&
           runtimeType == other.runtimeType &&
+          id == other.id &&
           title == other.title &&
           price == other.price &&
           parts == other.parts &&
@@ -27,5 +30,9 @@ class BillPosition {
 
   @override
   int get hashCode =>
-      title.hashCode ^ price.hashCode ^ parts.hashCode ^ personalParts.hashCode;
+      id.hashCode ^
+      title.hashCode ^
+      price.hashCode ^
+      parts.hashCode ^
+      personalParts.hashCode;
 }

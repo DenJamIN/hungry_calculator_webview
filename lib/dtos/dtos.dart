@@ -5,6 +5,8 @@ export 'request/create_group_participant_request.dart';
 export 'request/create_group_request.dart';
 export 'request/create_group_request_group_participant.dart';
 
+export 'response/create_bill_response.dart';
+export 'response/create_bill_response_position.dart';
 export 'response/create_group_participant_response.dart';
 export 'response/create_group_response.dart';
 
