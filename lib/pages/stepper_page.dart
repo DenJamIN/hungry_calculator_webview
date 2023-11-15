@@ -2,6 +2,7 @@ import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hungry_calculator/widget/group_widget.dart';
+import 'package:hungry_calculator/widget/receipt_widget.dart';
 
 class StepperPage extends StatefulWidget {
   const StepperPage({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class StepperPage extends StatefulWidget {
 
 class _StepperPageState extends State<StepperPage> {
   List<String> groups = [];
+  List<Map<String, dynamic>> items = [];
 
   int activeStep = 0;
   int reachedStep = 0;
@@ -175,11 +177,11 @@ class _StepperPageState extends State<StepperPage> {
   }
 
   Widget group() {
-    return SizedBox(width: 400, height: 700, child: GroupWidget(groups: groups));
+    return SizedBox(width: 400, height: 500, child: GroupWidget(groups: groups));
   }
 
   Widget receipt() {
-    return const Center(child: Text('Чек'),);
+    return SizedBox(width: 400, height: 500, child: ReceiptScannerWidget(items: items));
   }
 
   Widget splitReceipt() {

@@ -4,6 +4,7 @@ class GroupWidget extends StatefulWidget {
   List<String> groups;
 
   GroupWidget({required this.groups});
+
   @override
   _GroupWidgetState createState() => _GroupWidgetState();
 }
@@ -13,62 +14,50 @@ class _GroupWidgetState extends State<GroupWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Scaffold(
+      body: Column(
         children: [
           field(),
           table(),
         ],
-      );
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addGuest,
+        foregroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(46, 46, 229, 100),
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 
   Widget field() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: textController,
-              decoration: const InputDecoration(
-                hintText: 'Введите текст',
-              ),
-              textCapitalization: TextCapitalization.sentences,
-              style: const TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 18.0,
-              ),
-            ),
+      child: Expanded(
+        child: TextField(
+          controller: textController,
+          decoration: const InputDecoration(
+            hintText: 'Введите текст',
           ),
-          const SizedBox(width: 8.0),
-          InkWell(
-            onTap: () {
-              final name = textController.text.trim();
-              if(name.length < 2){
-                setState(() {
-                  widget.groups.add(textController.text);
-                  textController.clear();
-                });
-              }
-            },
-            child: Container(
-              width: 50.0,
-              height: 50.0,
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-              ),
-            ),
+          textCapitalization: TextCapitalization.sentences,
+          style: const TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 18.0,
           ),
-        ],
+          onEditingComplete: _addGuest,
+        ),
       ),
     );
+  }
+
+  void _addGuest() {
+    final name = textController.text.trim();
+    if (name.length > 1) {
+      setState(() {
+        widget.groups.add(textController.text);
+        textController.clear();
+      });
+    }
   }
 
   Widget table() {
@@ -84,11 +73,10 @@ class _GroupWidgetState extends State<GroupWidget> {
               title: Text(
                 widget.groups[index],
                 style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 18.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold
-                ),
+                    fontFamily: 'Montserrat',
+                    fontSize: 18.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           );
