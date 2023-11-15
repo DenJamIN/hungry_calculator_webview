@@ -1,7 +1,7 @@
-class CreateParticipantRequest {
+class CreateGroupParticipantRequest {
   String name;
 
-  CreateParticipantRequest({required this.name});
+  CreateGroupParticipantRequest({required this.name});
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -10,7 +10,7 @@ class CreateParticipantRequest {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CreateParticipantRequest &&
+      other is CreateGroupParticipantRequest &&
           runtimeType == other.runtimeType &&
           name == other.name;
 
