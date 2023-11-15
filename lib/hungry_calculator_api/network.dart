@@ -1,0 +1,42 @@
+import 'package:http/http.dart' as http;
+
+class Network {
+  final String scheme = 'http';
+  final String host = 'localhost';
+  final int port = 8080;
+  String path;
+  int? id;
+  String? fragment;
+  late Uri url;
+
+  Network({required this.path, this.fragment}) {
+    url = Uri(
+      scheme: scheme,
+      host: host,
+      port: port,
+      path: 'api/$path',
+      fragment: fragment,
+    );
+  }
+
+  Network.withID({required this.path, required this.id, this.fragment}) {
+    url = Uri(
+        scheme: scheme,
+        host: host,
+        port: port,
+        path: '$path/$id',
+        fragment: fragment);
+  }
+
+  Future<http.Response> post(String jsonEncode) {
+    return http.post(Uri.parse(url.toString()),
+        headers: <String, String>{
+          "Content-Type": "application/json;charset=UTF-8",
+        },
+        body: jsonEncode);
+  }
+
+  Future<http.Response> get() {
+    return http.get(Uri.parse(url.toString()));
+  }
+}

@@ -6,7 +6,7 @@ import 'group_participant.dart';
 import 'bill_position.dart';
 
 class Group {
-  int? id;
+  String? id;
   String title;
   GroupCreator creator;
   List<GroupParticipant>? participants;
