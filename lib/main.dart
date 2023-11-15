@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hungry_calculator/pages/main_page.dart';
+import 'package:hungry_calculator/pages/greetings_page.dart';
+import 'package:hungry_calculator/pages/parsing_receipt_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const MainPage(),
+      home: const GreetingsPage(),
     );
   }
 }
