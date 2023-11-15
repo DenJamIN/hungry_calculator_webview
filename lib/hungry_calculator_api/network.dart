@@ -5,7 +5,6 @@ class Network {
   final String host = 'localhost';
   final int port = 8080;
   String path;
-  int? id;
   String? fragment;
   late Uri url;
 
@@ -17,15 +16,6 @@ class Network {
       path: 'api/$path',
       fragment: fragment,
     );
-  }
-
-  Network.withID({required this.path, required this.id, this.fragment}) {
-    url = Uri(
-        scheme: scheme,
-        host: host,
-        port: port,
-        path: '$path/$id',
-        fragment: fragment);
   }
 
   Future<http.Response> post(String jsonEncode) {

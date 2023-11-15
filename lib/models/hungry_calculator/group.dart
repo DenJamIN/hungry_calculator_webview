@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'group_creator.dart';
 import 'group_participant.dart';
 
