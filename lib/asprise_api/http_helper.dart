@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' hide Client;
-import '../../models/asprise/models.dart';
-import 'network.dart';
+import '../models/asprise/models.dart';
+import 'asprise_api/network.dart';
 
 abstract class HttpHelper<T> {
   Future<List<T>> get();
