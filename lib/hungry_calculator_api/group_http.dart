@@ -9,7 +9,7 @@ class GroupHttp {
 
   Future<Group> save(Group group) async {
     final response =
-        await Network(path: path).post(jsonEncode(CreateGroupRequest(
+        await Network(path: '$path/create/').post(jsonEncode(CreateGroupRequest(
       title: group.title,
       creator: GroupCreatorDto(
         id: group.creator.id!,

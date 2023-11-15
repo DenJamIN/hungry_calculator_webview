@@ -2,8 +2,8 @@ import 'package:http/http.dart' as http;
 
 class Network {
   final String scheme = 'http';
-  final String host = 'localhost';
-  final int port = 8080;
+  final String host = '185.231.154.195';
+  final int port = 80;
   String path;
   String? fragment;
   late Uri url;

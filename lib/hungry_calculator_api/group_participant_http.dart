@@ -9,7 +9,7 @@ class GroupParticipantHttp {
   final String path = 'participants';
 
   Future<GroupParticipant> save(GroupParticipant participant) async {
-    final response = await Network(path: path).post(
+    final response = await Network(path: '$path/create/').post(
         jsonEncode(CreateGroupParticipantRequest(name: participant.name)));
     final decodedResponse =
         CreateGroupParticipantResponse.fromJson(jsonDecode(response.body));
