@@ -11,7 +11,7 @@ class CreateBillRequest {
 
   Map<String, dynamic> toJson() => {
         'groupId': groupId,
-        'positions': positions.map((position) => position.toJson()),
+        'positions': positions.map((position) => position.toJson()).toList(),
       };
 
   @override

@@ -12,10 +12,9 @@ class CreateGroupResponse {
   factory CreateGroupResponse.fromJson(Map<String, dynamic> json) =>
       CreateGroupResponse(
         id: json['groupId'],
-        participants: json['participants']
-            ?.map((participantJson) =>
-                CreateGroupResponseParticipant.fromJson(participantJson))
-            .toList(),
+        participants: List<CreateGroupResponseParticipant>.from(
+            json['participants']?.map((participantJson) =>
+                CreateGroupResponseParticipant.fromJson(participantJson))),
       );
 
   @override

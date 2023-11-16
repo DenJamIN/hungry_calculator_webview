@@ -17,7 +17,7 @@ class CreateBillRequestPosition {
         'title': title,
         'price': price,
         'parts': parts,
-        'payers': payers.map((payer) => payer.toJson()),
+        'payers': payers.map((payer) => payer.toJson()).toList(),
       };
 
   @override
