@@ -1,11 +1,21 @@
+import 'create_group_response_participant.dart';
+
 class CreateGroupResponse {
   String id;
+  List<CreateGroupResponseParticipant> participants;
 
-  CreateGroupResponse({required this.id});
+  CreateGroupResponse({
+    required this.id,
+    required this.participants,
+  });
 
   factory CreateGroupResponse.fromJson(Map<String, dynamic> json) =>
       CreateGroupResponse(
         id: json['groupId'],
+        participants: json['participants']
+            .map((participantJson) =>
+                CreateGroupResponseParticipant.fromJson(participantJson))
+            .toList(),
       );
 
   @override

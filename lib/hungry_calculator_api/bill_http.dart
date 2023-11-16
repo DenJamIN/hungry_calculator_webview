@@ -6,7 +6,7 @@ import '../models/hungry_calculator/models.dart';
 import 'network.dart';
 
 class BillHttp {
-  final String path = 'bills';
+  final String path = 'bill_positions';
 
   Future<Group> save(Group groupWithBill) async {
     final response =

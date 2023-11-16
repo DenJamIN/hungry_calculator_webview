@@ -23,6 +23,15 @@ class GroupHttp {
 
     group.id = decodedResponse.id;
 
+    final responseParticipants = decodedResponse.participants.toSet();
+    for (var participant in group.participants!) {
+      final participantInResponse =
+          responseParticipants.firstWhere((p) => p.name == participant.name);
+      responseParticipants.remove(participantInResponse);
+
+      participant.id = participantInResponse.id;
+    }
+
     return group;
   }
 }
