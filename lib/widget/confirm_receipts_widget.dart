@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:rounded_expansion_tile/rounded_expansion_tile.dart';
 
 class GuestSummaryWidget extends StatelessWidget {
@@ -13,7 +14,7 @@ class GuestSummaryWidget extends StatelessWidget {
         itemCount: receipts.length,
         itemBuilder: (context, index) {
           final guestName = receipts.keys.elementAt(index);
-          final guestItems = receipts[guestName]!;
+          final guestItems = combineItems(receipts[guestName]!);
           final totalCost = calculateTotalCost(guestItems);
 
           return Card(
@@ -29,7 +30,7 @@ class GuestSummaryWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(28)),
               title: Center(
                   child: Text(
-                guestName,
+                '${guestName[0].toUpperCase()}${guestName.substring(1,guestName.length)}',
                 style: const TextStyle(
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.bold,
@@ -95,5 +96,30 @@ class GuestSummaryWidget extends StatelessWidget {
 
   num calculateTotalCost(List<Map<String, dynamic>> items) {
     return items.fold(0, (sum, item) => sum + item['quantity'] * item['price']);
+  }
+
+  List<Map<String, dynamic>> combineItems(List<Map<String, dynamic>> items) {
+    Map<String, List<Map<String, dynamic>>> groupedItems =
+    groupBy(items, (item) => item['name']);
+
+    List<Map<String, dynamic>> combinedItems = [];
+
+    groupedItems.forEach((name, itemList) {
+      var totalQuantity = 0;
+
+      itemList.forEach((item) {
+        totalQuantity++;
+      });
+
+      var combinedItem = {
+        'name': name,
+        'quantity': totalQuantity,
+        'price': itemList.first['price'],
+      };
+
+      combinedItems.add(combinedItem);
+    });
+
+    return combinedItems;
   }
 }

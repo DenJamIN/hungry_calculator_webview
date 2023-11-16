@@ -68,10 +68,12 @@ class _GroupWidgetState extends State<GroupWidget> {
           return Card(
             elevation: 5.0,
             margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(28.0)),
             child: ListTile(
               tileColor: const Color.fromRGBO(46, 46, 229, 100),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(28.0),
               ),
               title: Center(
                 child: Text(
