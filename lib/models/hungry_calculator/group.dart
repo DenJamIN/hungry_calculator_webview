@@ -1,14 +1,12 @@
-import 'dart:convert';
-
-import 'group_creator.dart';
 import 'group_participant.dart';
 
 import 'bill_position.dart';
 
 class Group {
-  int? id;
+  String? id;
   String title;
-  GroupCreator creator;
+  GroupParticipant creator;
+  String requisites;
   List<GroupParticipant>? participants;
   List<BillPosition>? bill;
 
@@ -16,6 +14,7 @@ class Group {
     this.id,
     required this.title,
     required this.creator,
+    required this.requisites,
     this.participants,
     this.bill,
   });
@@ -28,6 +27,7 @@ class Group {
           id == other.id &&
           title == other.title &&
           creator == other.creator &&
+          requisites == other.requisites &&
           participants == other.participants &&
           bill == other.bill;
 
@@ -36,6 +36,7 @@ class Group {
       id.hashCode ^
       title.hashCode ^
       creator.hashCode ^
+      requisites.hashCode ^
       participants.hashCode ^
       bill.hashCode;
 }
