@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:hungry_calculator/hungry_calculator_api/response_decoder.dart';
+
 import '../dtos/dtos.dart';
 import '../models/hungry_calculator/models.dart';
 import 'network.dart';
@@ -19,7 +21,7 @@ class GroupHttp {
           .toList(),
     )));
     final decodedResponse =
-        CreateGroupResponse.fromJson(jsonDecode(response.body));
+        CreateGroupResponse.fromJson(decodeResponse(response));
 
     group.id = decodedResponse.id;
 
