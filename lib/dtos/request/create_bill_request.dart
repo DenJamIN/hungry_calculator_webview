@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'create_bill_request_position.dart';
 
 class CreateBillRequest {
@@ -13,7 +11,7 @@ class CreateBillRequest {
 
   Map<String, dynamic> toJson() => {
         'groupId': groupId,
-        'positions': jsonEncode(positions.map((position) => position.toJson())),
+        'positions': positions.map((position) => position.toJson()),
       };
 
   @override

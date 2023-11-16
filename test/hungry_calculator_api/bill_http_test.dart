@@ -15,7 +15,7 @@ void main() {
     participants: List.of({anna, ian, vasya}),
   );
 
-  test('Save group', () async {
+  test('Save bill', () async {
     await GroupParticipantHttp().save(nastya);
     await GroupHttp().save(group);
 
@@ -25,22 +25,22 @@ void main() {
           price: 299,
           parts: 3,
           personalParts: Map.fromEntries({
-            MapEntry(nastya, Tuple2(199, 2)),
-            MapEntry(ian, Tuple2(100, 1)),
+            MapEntry(nastya, const Tuple2(199, 2)),
+            MapEntry(ian, const Tuple2(100, 1)),
           })),
       BillPosition(
         title: 'Quattro Formaggi',
         price: 499,
         parts: 1,
-        personalParts: Map.fromEntries({MapEntry(anna, Tuple2(499, 1))}),
+        personalParts: Map.fromEntries({MapEntry(anna, const Tuple2(499, 1))}),
       ),
       BillPosition(
         title: 'Vitello Tonnato',
         price: 199,
         parts: 2,
         personalParts: Map.fromEntries({
-          MapEntry(nastya, Tuple2(100, 1)),
-          MapEntry(vasya, Tuple2(99, 1)),
+          MapEntry(nastya, const Tuple2(100, 1)),
+          MapEntry(vasya, const Tuple2(99, 1)),
         }),
       ),
     });
