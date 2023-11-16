@@ -18,6 +18,7 @@ class StepperPage extends StatefulWidget {
 class _StepperPageState extends State<StepperPage> {
   List<String> groups = [];
   List<Map<String, dynamic>> items = [];
+  List<Map<String, dynamic>> items_cop = [];
   Map<String, List<Map<String, dynamic>>> receipts = {};
 
   int activeStep = 0;
@@ -195,7 +196,7 @@ class _StepperPageState extends State<StepperPage> {
   }
 
   Widget receipt() {
-    return SizedBox(width: 400, height: 500, child: ReceiptScannerWidget(items: items));
+    return SizedBox(width: 400, height: 500, child: ReceiptScannerWidget(items: items, cop: items_cop));
   }
 
   Widget splitReceipt() {
@@ -207,7 +208,7 @@ class _StepperPageState extends State<StepperPage> {
   }
 
   Widget phoneAndSend(){
-    return PhoneWidget(receipts: receipts, items: items,);
+    return PhoneWidget(receipts: receipts, items: items_cop,);
   }
 }
 

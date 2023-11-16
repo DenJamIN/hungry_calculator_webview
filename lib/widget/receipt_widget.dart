@@ -7,8 +7,9 @@ import 'package:image_picker/image_picker.dart';
 
 class ReceiptScannerWidget extends StatefulWidget {
   List<Map<String, dynamic>> items;
+  List<Map<String, dynamic>> cop;
 
-  ReceiptScannerWidget({super.key, required this.items});
+  ReceiptScannerWidget({super.key, required this.items, required this.cop});
 
   @override
   _ReceiptScannerWidgetState createState() => _ReceiptScannerWidgetState();
@@ -176,6 +177,11 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
     if (name.isNotEmpty && price.isNotEmpty && quantity.isNotEmpty) {
       setState(() {
         widget.items.add({
+          'name': name,
+          'price': num.parse(price),
+          'quantity': num.parse(quantity),
+        });
+        widget.cop.add({
           'name': name,
           'price': num.parse(price),
           'quantity': num.parse(quantity),

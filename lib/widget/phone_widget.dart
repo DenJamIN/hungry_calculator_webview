@@ -116,20 +116,22 @@ class _PhoneWidget extends State<PhoneWidget> {
             personalParts: Map.fromEntries(
               widget.receipts.entries
                   .where((entry) =>
-                      entry.value.any((pos) => compareMaps(pos, item)))
+                      entry.value.any((pos) => compareMapsWithoutQTY(pos, item)))
                   .map(
-                (entry) {
-                  final posG = entry.value.firstWhere(
-                      (itemG) => compareMapsWithoutQTY(itemG, item));
-                  return MapEntry(
-                    participants.firstWhere(
-                        (participant) => participant.name == entry.key),
-                    Tuple2(
-                      calculateTotalCost(posG),
-                      posG['quantity'],
-                    ),
-                  );
-                },
+                    (entry) {
+                      final allByOnePos = entry.value.where(
+                          (itemG) => compareMapsWithoutQTY(itemG, item)).toList();
+                      final quantity = allByOnePos.length;
+                      final posG = allByOnePos.first;
+                      return MapEntry(
+                        participants.firstWhere(
+                            (participant) => participant.name == entry.key),
+                        Tuple2(
+                          makeInteger(quantity * posG['price']),
+                          quantity,
+                        ),
+                      );
+                    },
               ),
             ),
           ),
@@ -207,33 +209,6 @@ int calculateTotalCost(Map<String, dynamic> item) {
   return makeInteger(item['quantity'] * item['price']);
 }
 
-List<Map<String, dynamic>> combineItems(List<Map<String, dynamic>> items) {
-  Map<String, List<Map<String, dynamic>>> groupedItems =
-      groupBy(items, (item) => item['name']);
-
-  List<Map<String, dynamic>> combinedItems = [];
-
-  groupedItems.forEach((name, itemList) {
-    var totalQuantity = 0;
-    var delta = 0.0;
-
-    itemList.forEach((item) {
-      totalQuantity++;
-      delta += item['price'];
-    });
-
-    var combinedItem = {
-      'name': name,
-      'quantity': totalQuantity,
-      'price': delta,
-    };
-
-    combinedItems.add(combinedItem);
-  });
-
-  return combinedItems;
-}
-
 int makeInteger(num number) {
   while (number % 1 != 0) {
     number *= 10;
@@ -241,15 +216,8 @@ int makeInteger(num number) {
   return int.tryParse(number.toString()) ?? 0;
 }
 
-bool compareMaps(Map<String, dynamic> map1, Map<String, dynamic> map2) {
-  return map1['name'] == map2['name'] &&
-      map1['price'] == map2['price'] &&
-      map1['quantity'] == map2['quantity'];
-}
-
 bool compareMapsWithoutQTY(
     Map<String, dynamic> map1, Map<String, dynamic> map2) {
   return map1['name'] == map2['name'] &&
-      map1['price'] == map2['price'] &&
-      map1['quantity'] == map2['quantity'];
+      map1['price'] == map2['price'];
 }
