@@ -8,7 +8,7 @@ class CreateBillResponse {
   CreateBillResponse({required this.positions});
 
   factory CreateBillResponse.fromJson(Map<String, dynamic> json) =>
-      jsonDecode(json['positions']).map(
+      jsonDecode(json['positions'])?.map(
           (positionJson) => CreateBillResponsePosition.fromJson(positionJson));
 
   @override

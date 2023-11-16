@@ -21,6 +21,8 @@ void main() {
     await GroupHttp().save(group1);
     expect(group1.id, isNotNull);
     expect(group1.id!.length, greaterThan(0));
+    expect(
+        group1.participants!.map((p) => p.id).toSet().length, greaterThan(0));
   });
 
   Group group2 = Group(

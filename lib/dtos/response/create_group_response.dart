@@ -13,7 +13,7 @@ class CreateGroupResponse {
       CreateGroupResponse(
         id: json['groupId'],
         participants: json['participants']
-            .map((participantJson) =>
+            ?.map((participantJson) =>
                 CreateGroupResponseParticipant.fromJson(participantJson))
             .toList(),
       );
