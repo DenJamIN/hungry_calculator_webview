@@ -21,7 +21,7 @@ class PhoneWidget extends StatefulWidget {
 
 class _PhoneWidget extends State<PhoneWidget> {
   String phone = '';
-  bool enabled = true;
+  bool enabled = false;
   String code = '';
   String event = 'Тестовый';
 
@@ -49,6 +49,16 @@ class _PhoneWidget extends State<PhoneWidget> {
       ),
       initialCountryCode: 'RU',
       style: const TextStyle(fontFamily: 'Montserrat', fontSize: 18),
+      onChanged: (phone) {
+        setState(() {
+          this.phone = '8${phone.number}';
+          if (this.phone.length > 9) {
+            enabled = true;
+          } else {
+            enabled = false;
+          }
+        });
+      },
       onSaved: (phone) {
         setState(() {
           this.phone = phone!.number;
@@ -98,19 +108,32 @@ class _PhoneWidget extends State<PhoneWidget> {
     await GroupHttp().save(group);
 
     group.bill = widget.items
-        .map((item) => BillPosition(
-              title: item['name'],
-              price: calculateTotalCost(item),
-              parts: item['quantity'],
-              personalParts: Map.fromEntries(
-                widget.receipts.entries
-                    .where((entry) => entry.value.any((pos) => compareMaps(pos, item)))
-                    .map((entry) {
-                      final posG = entry.value.firstWhere((itemG) => compareMapsWithoutQTY(itemG, item));
-                      return MapEntry(GroupParticipant(name: entry.key), Tuple2(calculateTotalCost(posG), posG['quantity']));
-                    })
+        .map(
+          (item) => BillPosition(
+            title: item['name'],
+            price: calculateTotalCost(item),
+            parts: item['quantity'],
+            personalParts: Map.fromEntries(
+              widget.receipts.entries
+                  .where((entry) =>
+                      entry.value.any((pos) => compareMaps(pos, item)))
+                  .map(
+                (entry) {
+                  final posG = entry.value.firstWhere(
+                      (itemG) => compareMapsWithoutQTY(itemG, item));
+                  return MapEntry(
+                    participants.firstWhere(
+                        (participant) => participant.name == entry.key),
+                    Tuple2(
+                      calculateTotalCost(posG),
+                      posG['quantity'],
+                    ),
+                  );
+                },
               ),
-            ))
+            ),
+          ),
+        )
         .toList();
 
     await BillHttp().save(group);
@@ -224,8 +247,8 @@ bool compareMaps(Map<String, dynamic> map1, Map<String, dynamic> map2) {
       map1['quantity'] == map2['quantity'];
 }
 
-
-bool compareMapsWithoutQTY(Map<String, dynamic> map1, Map<String, dynamic> map2) {
+bool compareMapsWithoutQTY(
+    Map<String, dynamic> map1, Map<String, dynamic> map2) {
   return map1['name'] == map2['name'] &&
       map1['price'] == map2['price'] &&
       map1['quantity'] == map2['quantity'];

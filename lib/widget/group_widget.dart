@@ -52,7 +52,7 @@ class _GroupWidgetState extends State<GroupWidget> {
     final name = textController.text.trim();
     if (name.length > 1) {
       setState(() {
-        widget.groups.add(textController.text);
+        widget.groups.add(textController.text.trim());
         textController.clear();
       });
     }

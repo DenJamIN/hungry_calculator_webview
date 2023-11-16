@@ -17,7 +17,7 @@ class GroupHttp {
           .map((participant) =>
               CreateGroupRequestGroupParticipant(name: participant.name))
           .toList(),
-    ).toJson()));
+    )));
     final decodedResponse =
         CreateGroupResponse.fromJson(jsonDecode(response.body));
 

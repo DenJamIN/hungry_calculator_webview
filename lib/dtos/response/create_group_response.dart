@@ -1,7 +1,7 @@
 import 'create_group_response_participant.dart';
 
 class CreateGroupResponse {
-  String id;
+  String? id;
   List<CreateGroupResponseParticipant> participants;
 
   CreateGroupResponse({
