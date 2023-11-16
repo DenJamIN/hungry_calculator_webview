@@ -2,6 +2,7 @@ import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hungry_calculator/widget/group_widget.dart';
+import 'package:hungry_calculator/widget/phone_widget.dart';
 import 'package:hungry_calculator/widget/receipt_widget.dart';
 
 import '../widget/confirm_receipts_widget.dart';
@@ -21,8 +22,8 @@ class _StepperPageState extends State<StepperPage> {
 
   int activeStep = 0;
   int reachedStep = 0;
-  int upperBound = 3;
-  Set<int> reachedSteps = <int>{0, 1, 2, 3};
+  int upperBound = 4;
+  Set<int> reachedSteps = <int>{0, 1, 2, 3, 4};
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +100,15 @@ class _StepperPageState extends State<StepperPage> {
                   enabled: _allowTabStepping(2, StepEnabling.sequential),
                 ),
                 EasyStep(
-                  icon: const Icon(CupertinoIcons.money_dollar),
-                  title: 'Готово',
+                  icon: const Icon(CupertinoIcons.money_rubl),
+                  title: 'К оплате',
+                  lineText: 'Калькулятор чеков',
                   enabled: _allowTabStepping(3, StepEnabling.sequential),
+                ),
+                EasyStep(
+                  icon: const Icon(CupertinoIcons.bag_fill),
+                  title: 'Создание группы',
+                  enabled: _allowTabStepping(4, StepEnabling.sequential),
                 ),
               ],
               onStepReached: (index) =>
@@ -122,7 +129,6 @@ class _StepperPageState extends State<StepperPage> {
         : reachedSteps.contains(index);
   }
 
-  /// Returns the next button.
   Widget _nextStep(StepEnabling enabling) {
     return IconButton(
       onPressed: () {
@@ -174,7 +180,11 @@ class _StepperPageState extends State<StepperPage> {
     }
 
     if (activeStep == 3) {
-      return done();
+      return guestReceipts();
+    }
+
+    if (activeStep == 4) {
+      return phoneAndSend();
     }
 
     return Container();
@@ -192,8 +202,12 @@ class _StepperPageState extends State<StepperPage> {
     return SizedBox(width: 400, height: 500, child: GuestSelectionWidget(items: items, groups: groups, receipts: receipts,));
   }
 
-  Widget done() {
+  Widget guestReceipts() {
     return SizedBox(width: 400, height: 500, child: GuestSummaryWidget(receipts: receipts));
+  }
+
+  Widget phoneAndSend(){
+    return PhoneWidget(receipts: receipts);
   }
 }
 

@@ -16,6 +16,7 @@ dependencies:
   http: ^1.1.0
   easy_stepper: ^0.8.2
   rounded_expansion_tile: ^0.0.13
+  intl_phone_field: ^3.2.0
 
 dev_dependencies:
   flutter_test:

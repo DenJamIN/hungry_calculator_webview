@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ReceiptScannerWidget extends StatefulWidget {
   List<Map<String, dynamic>> items;
@@ -84,10 +88,10 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
         children: [
           _buildFloatingActionButton(onPressed: addItem, icon: Icons.add),
           const SizedBox(height: 16.0),
-          _buildFloatingActionButton(onPressed: () {}, icon: Icons.camera_alt),
+          _buildFloatingActionButton(onPressed: camera, icon: Icons.camera_alt),
           const SizedBox(height: 16.0),
           _buildFloatingActionButton(
-              onPressed: () {}, icon: Icons.document_scanner),
+              onPressed: scanning, icon: Icons.document_scanner),
           const SizedBox(height: 16.0),
         ],
       ),
@@ -176,14 +180,11 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
           'price': num.parse(price),
           'quantity': num.parse(quantity),
         });
-
-        // Очистка полей после добавления элемента
         nameEditingController.clear();
         priceEditingController.clear();
         quantityEditingController.clear();
       });
     } else {
-      // Вывести предупреждение, если не все поля заполнены
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Заполните все поля'),
@@ -204,19 +205,17 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
         title: Text(
           'Название: ${item['name']}',
           style: const TextStyle(
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.bold,
-            color: Colors.white
-          ),
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
         ),
         subtitle: Text(
           'Количество: ${item['quantity']}\nЦена: ${item['price']}',
           style: const TextStyle(
-            fontFamily: 'Montserrat',
-            fontStyle: FontStyle.italic,
-            color: Colors.white,
-            fontSize: 15
-          ),
+              fontFamily: 'Montserrat',
+              fontStyle: FontStyle.italic,
+              color: Colors.white,
+              fontSize: 15),
         ),
         onLongPress: () {
           startEditing(item);
@@ -258,6 +257,57 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
           content: Text('Заполните все поля'),
         ),
       );
+    }
+  }
+
+  void scanning() async {
+    final XFile? image =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      _sendImageToApi(image.path);
+    }
+  }
+
+  void camera() async {
+    final XFile? image =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (image != null) {
+      _sendImageToApi(image.path);
+    }
+  }
+
+  void _sendImageToApi(String imagePath) async {
+    var url = Uri.parse("https://ocr.asprise.com/api/v1/receipt");
+
+    var request = http.MultipartRequest("POST", url)
+      ..fields['api_key'] = 'TEST'
+      ..fields['recognizer'] = 'auto'
+      ..fields['ref_no'] = 'oct_dart'
+      ..files.add(await http.MultipartFile.fromPath('file', imagePath));
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      var jsonResponse = await response.stream.bytesToString();
+      var decodedResponse = json.decode(jsonResponse);
+      var items = decodedResponse['receipts'][0]['items'];
+
+      items.take(2).forEach((item) => setState(() {
+            widget.items.add({
+              'name': item['description'],
+              'price': item['amount'],
+              'quantity': item['qty'],
+            });
+          }));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ошибка отправки чека'),
+        ),
+      );
+      print('error connection');
     }
   }
 }

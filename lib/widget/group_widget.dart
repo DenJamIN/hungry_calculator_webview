@@ -33,19 +33,17 @@ class _GroupWidgetState extends State<GroupWidget> {
   Widget field() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Expanded(
-        child: TextField(
-          controller: textController,
-          decoration: const InputDecoration(
-            hintText: 'Имя гостя',
-          ),
-          textCapitalization: TextCapitalization.sentences,
-          style: const TextStyle(
-            fontFamily: 'Montserrat',
-            fontSize: 18.0,
-          ),
-          onEditingComplete: _addGuest,
+      child: TextField(
+        controller: textController,
+        decoration: const InputDecoration(
+          hintText: 'Имя гостя',
         ),
+        textCapitalization: TextCapitalization.sentences,
+        style: const TextStyle(
+          fontFamily: 'Montserrat',
+          fontSize: 18.0,
+        ),
+        onEditingComplete: _addGuest,
       ),
     );
   }
