@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:hungry_calculator/dtos/dtos.dart';
+import 'package:hungry_calculator/hungry_calculator_api/response_decoder.dart';
 
 import '../models/hungry_calculator/models.dart';
 import 'network.dart';
@@ -29,7 +30,7 @@ class BillHttp {
           .toList(),
     ).toJson()));
     final decodedResponse =
-        CreateBillResponse.fromJson(jsonDecode(response.body));
+        CreateBillResponse.fromJson(decodeResponse(response));
 
     final responsePositions = decodedResponse.positions.toSet();
     for (var position in groupWithBill.bill!) {
