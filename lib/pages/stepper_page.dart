@@ -207,7 +207,7 @@ class _StepperPageState extends State<StepperPage> {
   }
 
   Widget phoneAndSend(){
-    return PhoneWidget(receipts: receipts);
+    return PhoneWidget(receipts: receipts, items: items,);
   }
 }
 

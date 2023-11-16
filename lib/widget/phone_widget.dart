@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:collection/collection.dart';
+import 'package:tuple/tuple.dart';
+
+import '../hungry_calculator_api/bill_http.dart';
+import '../hungry_calculator_api/group_http.dart';
+import '../hungry_calculator_api/group_participant_http.dart';
+import '../models/hungry_calculator/models.dart';
 
 class PhoneWidget extends StatefulWidget {
+  final List<Map<String, dynamic>> items;
   final Map<String, List<Map<String, dynamic>>> receipts;
 
-  const PhoneWidget({super.key, required this.receipts});
+  const PhoneWidget({super.key, required this.receipts, required this.items});
 
   @override
   State<StatefulWidget> createState() => _PhoneWidget();
 }
 
 class _PhoneWidget extends State<PhoneWidget> {
-  late String phone;
-  bool enabled = false;
+  String phone = '';
+  bool enabled = true;
   String code = '';
+  String event = 'Тестовый';
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +82,42 @@ class _PhoneWidget extends State<PhoneWidget> {
   }
 
   void sendToAPI() async {
-    print('кнопка нажата');
+    List<GroupParticipant> participants =
+        widget.receipts.keys.map((e) => GroupParticipant(name: e)).toList();
+
+    final groupCreator = participants.first;
+
+    Group group = Group(
+      title: event,
+      creator: groupCreator,
+      requisites: phone,
+      participants: participants,
+    );
+
+    await GroupParticipantHttp().save(groupCreator);
+    await GroupHttp().save(group);
+
+    group.bill = widget.items
+        .map((item) => BillPosition(
+              title: item['name'],
+              price: calculateTotalCost(item),
+              parts: item['quantity'],
+              personalParts: Map.fromEntries(
+                widget.receipts.entries
+                    .where((entry) => entry.value.any((pos) => compareMaps(pos, item)))
+                    .map((entry) {
+                      final posG = entry.value.firstWhere((itemG) => compareMapsWithoutQTY(itemG, item));
+                      return MapEntry(GroupParticipant(name: entry.key), Tuple2(calculateTotalCost(posG), posG['quantity']));
+                    })
+              ),
+            ))
+        .toList();
+
+    await BillHttp().save(group);
+
+    setState(() {
+      code = "${group.id}";
+    });
   }
 
   Widget group() {
@@ -134,4 +178,55 @@ class _PhoneWidget extends State<PhoneWidget> {
       ),
     );
   }
+}
+
+int calculateTotalCost(Map<String, dynamic> item) {
+  return makeInteger(item['quantity'] * item['price']);
+}
+
+List<Map<String, dynamic>> combineItems(List<Map<String, dynamic>> items) {
+  Map<String, List<Map<String, dynamic>>> groupedItems =
+      groupBy(items, (item) => item['name']);
+
+  List<Map<String, dynamic>> combinedItems = [];
+
+  groupedItems.forEach((name, itemList) {
+    var totalQuantity = 0;
+    var delta = 0.0;
+
+    itemList.forEach((item) {
+      totalQuantity++;
+      delta += item['price'];
+    });
+
+    var combinedItem = {
+      'name': name,
+      'quantity': totalQuantity,
+      'price': delta,
+    };
+
+    combinedItems.add(combinedItem);
+  });
+
+  return combinedItems;
+}
+
+int makeInteger(num number) {
+  while (number % 1 != 0) {
+    number *= 10;
+  }
+  return int.tryParse(number.toString()) ?? 0;
+}
+
+bool compareMaps(Map<String, dynamic> map1, Map<String, dynamic> map2) {
+  return map1['name'] == map2['name'] &&
+      map1['price'] == map2['price'] &&
+      map1['quantity'] == map2['quantity'];
+}
+
+
+bool compareMapsWithoutQTY(Map<String, dynamic> map1, Map<String, dynamic> map2) {
+  return map1['name'] == map2['name'] &&
+      map1['price'] == map2['price'] &&
+      map1['quantity'] == map2['quantity'];
 }
