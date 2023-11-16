@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'create_bill_request_position_payer.dart';
 
 class CreateBillRequestPosition {
@@ -19,7 +17,7 @@ class CreateBillRequestPosition {
         'title': title,
         'price': price,
         'parts': parts,
-        'payers': jsonEncode(payers.map((payer) => payer.toJson())),
+        'payers': payers.map((payer) => payer.toJson()).toList(),
       };
 
   @override

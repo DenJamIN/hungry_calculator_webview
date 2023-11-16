@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'create_bill_response_position.dart';
 
 class CreateBillResponse {
@@ -8,8 +6,10 @@ class CreateBillResponse {
   CreateBillResponse({required this.positions});
 
   factory CreateBillResponse.fromJson(Map<String, dynamic> json) =>
-      jsonDecode(json['positions'])?.map(
-          (positionJson) => CreateBillResponsePosition.fromJson(positionJson));
+      CreateBillResponse(
+          positions: List<CreateBillResponsePosition>.from(json['positions']
+              ?.map((positionJson) =>
+                  CreateBillResponsePosition.fromJson(positionJson))));
 
   @override
   bool operator ==(Object other) =>

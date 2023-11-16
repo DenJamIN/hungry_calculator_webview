@@ -10,7 +10,7 @@ class BillHttp {
 
   Future<Group> save(Group groupWithBill) async {
     final response =
-        await Network(path: path).post(jsonEncode(CreateBillRequest(
+        await Network(path: '$path/create/').post(jsonEncode(CreateBillRequest(
       groupId: groupWithBill.id!,
       positions: groupWithBill.bill!
           .map((position) => CreateBillRequestPosition(
@@ -27,7 +27,7 @@ class BillHttp {
                     .toList(),
               ))
           .toList(),
-    )));
+    ).toJson()));
     final decodedResponse =
         CreateBillResponse.fromJson(jsonDecode(response.body));
 
