@@ -247,8 +247,8 @@ class _ReceiptScannerWidgetState extends State<ReceiptScannerWidget> {
     if (name.isNotEmpty && price.isNotEmpty && quantity.isNotEmpty) {
       setState(() {
         editingItem!['name'] = name;
-        editingItem!['price'] = price;
-        editingItem!['quantity'] = quantity;
+        editingItem!['price'] = num.parse(price);
+        editingItem!['quantity'] = num.parse(quantity);
 
         // Очистка полей и сброс редактируемого элемента
         nameEditingController.clear();
