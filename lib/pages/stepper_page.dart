@@ -9,7 +9,8 @@ import '../widget/confirm_receipts_widget.dart';
 import '../widget/split_widget.dart';
 
 class StepperPage extends StatefulWidget {
-  const StepperPage({Key? key}) : super(key: key);
+  final String event;
+  const StepperPage({Key? key, required this.event}) : super(key: key);
 
   @override
   State<StepperPage> createState() => _StepperPageState();
@@ -208,7 +209,7 @@ class _StepperPageState extends State<StepperPage> {
   }
 
   Widget phoneAndSend(){
-    return PhoneWidget(receipts: receipts, items: items_cop,);
+    return SizedBox(width: 400, height: 500, child: PhoneWidget(receipts: receipts, items: items_cop, event: widget.event));
   }
 }
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hungry_calculator/common.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:collection/collection.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tuple/tuple.dart';
 
 import '../hungry_calculator_api/bill_http.dart';
@@ -12,8 +13,13 @@ import '../models/hungry_calculator/models.dart';
 class PhoneWidget extends StatefulWidget {
   final List<Map<String, dynamic>> items;
   final Map<String, List<Map<String, dynamic>>> receipts;
+  final String event;
 
-  const PhoneWidget({super.key, required this.receipts, required this.items});
+  const PhoneWidget(
+      {super.key,
+      required this.receipts,
+      required this.items,
+      required this.event});
 
   @override
   State<StatefulWidget> createState() => _PhoneWidget();
@@ -26,45 +32,73 @@ class _PhoneWidget extends State<PhoneWidget> {
   String event = 'Тестовый';
 
   @override
+  void initState() {
+    event = widget.event;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        phoneField(),
-        const SizedBox(height: 30),
-        button(),
-        const SizedBox(height: 30),
-        group(),
-      ],
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          phoneField(),
+          const SizedBox(height: 30),
+          button(),
+          const SizedBox(height: 30),
+          group(),
+        ],
+      ),
+      floatingActionButton:
+        code.isEmpty
+            ? null : FloatingActionButton(
+            onPressed: () async {
+              String textToShare =
+              '''
+Я за тебя оплатил и в благородство играть не буду! Ты заплатишь!
+
+Вот ссылочка: https://share-bill.vercel.app/$code
+
+Если что код: $code
+
+Найдёшь себя и давай уже деньги''';
+              await Share.share(textToShare);
+              },
+            backgroundColor: colorBased,
+            child: const Icon(Icons.share, color: Colors.white,)),
     );
   }
 
   Widget phoneField() {
-    return IntlPhoneField(
-      decoration: const InputDecoration(
-        labelText: 'Номер телефона',
-        border: OutlineInputBorder(
-          borderSide: BorderSide(),
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: IntlPhoneField(
+        decoration: const InputDecoration(
+          labelText: 'Номер телефона',
+          border: OutlineInputBorder(
+            borderSide: BorderSide(),
+          ),
         ),
-      ),
-      initialCountryCode: 'RU',
-      style: const TextStyle(fontFamily: 'Montserrat', fontSize: 18),
-      onChanged: (phone) {
-        setState(() {
-          this.phone = '8${phone.number}';
-          if (this.phone.length > 9) {
+        initialCountryCode: 'RU',
+        style: const TextStyle(fontFamily: 'Montserrat', fontSize: 18),
+        onChanged: (phone) {
+          setState(() {
+            this.phone = '8${phone.number}';
+            if (this.phone.length > 9) {
+              enabled = true;
+            } else {
+              enabled = false;
+            }
+          });
+        },
+        onSaved: (phone) {
+          setState(() {
+            this.phone = phone!.number;
             enabled = true;
-          } else {
-            enabled = false;
-          }
-        });
-      },
-      onSaved: (phone) {
-        setState(() {
-          this.phone = phone!.number;
-          enabled = true;
-        });
-      },
+          });
+        },
+      ),
     );
   }
 
@@ -115,23 +149,24 @@ class _PhoneWidget extends State<PhoneWidget> {
             parts: item['quantity'],
             personalParts: Map.fromEntries(
               widget.receipts.entries
-                  .where((entry) =>
-                      entry.value.any((pos) => compareMapsWithoutQTY(pos, item)))
+                  .where((entry) => entry.value
+                      .any((pos) => compareMapsWithoutQTY(pos, item)))
                   .map(
-                    (entry) {
-                      final allByOnePos = entry.value.where(
-                          (itemG) => compareMapsWithoutQTY(itemG, item)).toList();
-                      final quantity = allByOnePos.length;
-                      final posG = allByOnePos.first;
-                      return MapEntry(
-                        participants.firstWhere(
-                            (participant) => participant.name == entry.key),
-                        Tuple2(
-                          makeInteger(quantity * posG['price']),
-                          quantity,
-                        ),
-                      );
-                    },
+                (entry) {
+                  final allByOnePos = entry.value
+                      .where((itemG) => compareMapsWithoutQTY(itemG, item))
+                      .toList();
+                  final quantity = allByOnePos.length;
+                  final posG = allByOnePos.first;
+                  return MapEntry(
+                    participants.firstWhere(
+                        (participant) => participant.name == entry.key),
+                    Tuple2(
+                      makeInteger(quantity * posG['price']),
+                      quantity,
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -146,53 +181,57 @@ class _PhoneWidget extends State<PhoneWidget> {
   }
 
   Widget group() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: Colors.white),
-      ),
-      child: ListTile(
-        tileColor: const Color.fromRGBO(46, 46, 229, 100),
-        contentPadding: const EdgeInsets.all(8.0),
-        leading: const Text(
-          'Код: ',
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        enabled: false,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            bottomLeft: Radius.circular(10.0),
-          ),
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              code,
-              style: const TextStyle(
-                fontFamily: 'Montserrat',
-                fontStyle: FontStyle.italic,
-                fontSize: 16,
+    return code.isEmpty
+        ? Container()
+        : Container(
+            width: 200,
+            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(color: Colors.white),
+            ),
+            child: ListTile(
+              tileColor: const Color.fromRGBO(46, 46, 229, 100),
+              contentPadding: const EdgeInsets.all(8.0),
+              leading: const Text(
+                'Код: ',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              enabled: false,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10.0),
+                  bottomLeft: Radius.circular(10.0),
+                ),
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    code,
+                    style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.white),
+                  ),
+                  IconButton(
+                    onPressed: () => copyToClipboard(),
+                    icon: const Icon(
+                      Icons.content_copy,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
-            IconButton(
-              onPressed: () => copyToClipboard(),
-              icon: const Icon(
-                Icons.content_copy,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   void copyToClipboard() {
@@ -218,6 +257,5 @@ int makeInteger(num number) {
 
 bool compareMapsWithoutQTY(
     Map<String, dynamic> map1, Map<String, dynamic> map2) {
-  return map1['name'] == map2['name'] &&
-      map1['price'] == map2['price'];
+  return map1['name'] == map2['name'] && map1['price'] == map2['price'];
 }

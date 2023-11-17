@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hungry_calculator/common.dart';
 
 class GuestSelectionWidget extends StatefulWidget {
   Map<String, List<Map<String, dynamic>>> receipts = {};
@@ -118,16 +119,35 @@ class _ItemSelectionScreenState extends State<ItemSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Выбор позиций для ${widget.groupName}'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Выбор позиций для ${widget.groupName}',
+          style: TextStyle(
+              fontFamily: 'Montserrat',
+              color: colorBased,
+              fontStyle: FontStyle.italic,
+              fontSize: 16),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new),
+          onPressed: leave,
+        ),
       ),
       body: _buildItemsList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(context, selectedItems);
-        },
-        child: const Icon(Icons.check),
+        onPressed: leave,
+        backgroundColor: colorBased,
+        child: const Icon(
+          Icons.check,
+          color: Colors.white,
+        ),
       ),
     );
+  }
+
+  void leave() {
+    Navigator.pop(context, selectedItems);
   }
 
   Widget _buildItemsList() {
@@ -138,18 +158,29 @@ class _ItemSelectionScreenState extends State<ItemSelectionScreen> {
         final itemName = item['name'];
         final availableQuantity = item['quantity'];
 
-        return ListTile(
-          title: Text(
-              '$itemName - $availableQuantity ${availableQuantity % 1 == 0 ? 'шт' : 'кг/л'}'),
-          leading: IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _addItemForGuest(item, availableQuantity),
+        return Card(
+          color: colorBased,
+          elevation: 5,
+          child: ListTile(
+            title: Text(
+              '$itemName - $availableQuantity ${availableQuantity % 1 == 0 ? 'шт' : 'кг/л'}',
+              style: const TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () => _addItemForGuest(item, availableQuantity),
+              color: Colors.white,
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.settings_backup_restore),
+              onPressed: () => _restoreItemFromGuest(item, availableQuantity),
+              color: Colors.white
+            ),
+            onTap: () => _addItemForGuest(item, availableQuantity),
           ),
-          trailing: IconButton(
-            icon: const Icon(Icons.settings_backup_restore),
-            onPressed: () => _restoreItemFromGuest(item, availableQuantity),
-          ),
-          onTap: () => _addItemForGuest(item, availableQuantity),
         );
       },
     );

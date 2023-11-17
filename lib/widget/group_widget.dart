@@ -54,6 +54,7 @@ class _GroupWidgetState extends State<GroupWidget> {
       setState(() {
         widget.groups.add(textController.text.trim());
         textController.clear();
+        textController.text = '';
       });
     }
   }
